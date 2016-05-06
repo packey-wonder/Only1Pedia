@@ -1,0 +1,13 @@
+---
+declared-services:
+  myElephant:
+    label: elephantsql
+    plan: turtle
+applications:
+- disk_quota: 1024M
+  host: Only1Pedia
+  name: Only1Pedia
+  path: target/vaadin-jpa-application.war
+  domain: mybluemix.net
+  instances: 1
+  memory: 1024M

@@ -1,0 +1,5 @@
+src/main/webapp/VAADIN/widgetsets
+.idea
+vaadin-jpa-application.iml
+/target/
+/.apt_generated/
