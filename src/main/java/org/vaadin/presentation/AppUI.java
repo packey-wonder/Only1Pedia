@@ -1,11 +1,12 @@
 package org.vaadin.presentation;
 
+import org.vaadin.cdiviewmenu.ViewMenuUI;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.cdi.CDIUI;
 import com.vaadin.ui.UI;
-import org.vaadin.cdiviewmenu.ViewMenuUI;
 
 
 /**
@@ -23,7 +24,7 @@ import org.vaadin.cdiviewmenu.ViewMenuUI;
  */
 @CDIUI("")
 @Theme("valo")
-@Title("Order Desk")
+@Title("ネットで学ぶ「なぜ生きる」")
 @Widgetset("AppWidgetset")
 public class AppUI extends ViewMenuUI {
 
