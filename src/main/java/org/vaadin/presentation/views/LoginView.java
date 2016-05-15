@@ -1,16 +1,12 @@
 package org.vaadin.presentation.views;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.spi.Bean;
 import javax.inject.Inject;
 
 import org.vaadin.backend.CustomerService;
 import org.vaadin.backend.domain.Customer;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
 import org.vaadin.cdiviewmenu.ViewMenuUI;
-import org.vaadin.viritin.label.RichText;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
@@ -21,8 +17,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 
 /*
@@ -60,16 +54,16 @@ public class LoginView extends MVerticalLayout implements View {
     	        	if (cust.getPassword().equals(event.getPassword()))  {
     	        			
     	        			user.setUser(cust);
-    	        			System.err.println("PASSWORD verified");
+    	        			System.err.println("パスワードが間違っています");
     	        		
     	        			ViewMenuUI.getMenu().navigateTo(AboutView.class);
     	        	} else {
-    	        		System.err.println("PASSWORD invalid");
+    	        		System.err.println("パスワードが間違っています");
     	        		loginForm.clear();
     	        	}
     	        	
     	        } else {
-    	        	System.err.println("no user found");
+    	        	System.err.println("ユーザーが見つかりません");
     	        	loginForm.clear();
     	        }
     	        

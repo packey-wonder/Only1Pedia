@@ -1,7 +1,6 @@
 package org.vaadin.presentation.views;
 
 import java.io.Serializable;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,9 +16,9 @@ public class UserInfo implements Serializable {
 
 	public List<String> getRoles() {
         return roles;
-    }	
-    
-    
+    }
+
+
     public UserInfo() {
         this.user = null;
     }
@@ -32,18 +31,15 @@ public class UserInfo implements Serializable {
         if (user == null) {
             return "anonymous user";
         } else {
-            return user.getEmail();
+            return user.getName();
         }
     }
 
     public void setUser(Customer user) {
         this.user = user;
         roles.clear();
-        if (user != null) {
-            roles.add(user.getRole());
-          
-        }
-        
-        
+
+
+
     }
 }

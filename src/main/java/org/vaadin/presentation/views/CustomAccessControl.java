@@ -1,14 +1,8 @@
 package org.vaadin.presentation.views;
 
-import javax.enterprise.inject.Alternative;
 import javax.annotation.Priority;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Specializes;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
-
-
-
-
 
 import com.vaadin.cdi.access.AccessControl;
 
@@ -18,7 +12,7 @@ public class CustomAccessControl extends AccessControl {
 
     @Inject
     private UserInfo userInfo;
-    
+
     @Override
     public boolean isUserSignedIn() {
         return userInfo.getUser() != null;
@@ -37,12 +31,17 @@ public class CustomAccessControl extends AccessControl {
         return false;
     }
 
-    @Override
-    public String getPrincipalName() {
+    public String String () {
         if (isUserSignedIn()) {
-            return userInfo.getUser().getEmail();
+            return userInfo.getUser().getName();
         }
         return null;
     }
+
+	@Override
+	public String getPrincipalName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
 
 }

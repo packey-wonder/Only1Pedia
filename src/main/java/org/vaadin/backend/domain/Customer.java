@@ -1,12 +1,14 @@
 package org.vaadin.backend.domain;
 
-import com.vividsolutions.jts.geom.Point;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Version;
 
 /**
  * A standard JPA entity, like in any other Java application.
@@ -16,8 +18,6 @@ import java.util.Date;
                 query="SELECT c FROM Customer c"),
         @NamedQuery(name="Customer.findByName",
                 query="SELECT c FROM Customer c WHERE LOWER(c.firstName) LIKE :filter OR LOWER(c.lastName) LIKE :filter"),
-        @NamedQuery(name="Customer.findByEmail",
-        		query="SELECT c FROM Customer c WHERE LOWER(c.email) LIKE :filter")    
 })
 @Entity
 public class Customer implements Serializable {
@@ -33,22 +33,8 @@ public class Customer implements Serializable {
     private String lastName;
 
     private String password;
-    
-    private String role;
-    
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date birthDate;
 
     private CustomerStatus status;
-
-    private Gender gender;
-
-    @NotNull(message = "Email is required")
-    @Pattern(regexp = ".+@.+\\.[a-z]+", message = "Must be valid email")
-    private String email;
-
-    @Lob
-    private Point location;
 
     public int getId() {
         return id;
@@ -56,24 +42,6 @@ public class Customer implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * Get the value of email
-     *
-     * @return the value of email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Set the value of email
-     *
-     * @param email new value of email
-     */
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     /**
@@ -92,24 +60,6 @@ public class Customer implements Serializable {
      */
     public void setStatus(CustomerStatus status) {
         this.status = status;
-    }
-
-    /**
-     * Get the value of birthDate
-     *
-     * @return the value of birthDate
-     */
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    /**
-     * Set the value of birthDate
-     *
-     * @param birthDate new value of birthDate
-     */
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
     }
 
     /**
@@ -148,21 +98,15 @@ public class Customer implements Serializable {
         this.firstName = firstName;
     }
 
-    public Gender getGender() {
-        return gender;
+    /**
+     * Get the value of firstName
+     *
+     * @return the value of firstName
+     */
+    public String getName() {
+        return lastName + " " + firstName;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public void setLocation(Point location) {
-        this.location = location;
-    }
-
-    public Point getLocation() {
-        return location;
-    }
 
     public boolean isPersisted() {
         return id > 0;
@@ -176,11 +120,5 @@ public class Customer implements Serializable {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
-	}
 
-	public void setRole(String role) {
-		this.role = role;
-	}
 }
