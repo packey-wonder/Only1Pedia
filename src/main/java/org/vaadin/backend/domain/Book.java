@@ -1,12 +1,13 @@
 package org.vaadin.backend.domain;
 
-import com.vividsolutions.jts.geom.Point;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * A standard JPA entity, like in any other Java application.
@@ -17,7 +18,7 @@ import java.util.Date;
         @NamedQuery(name="Book.findByName",
                 query="SELECT c FROM Book c WHERE LOWER(c.heading) LIKE :filter OR LOWER(c.body) LIKE :filter"),
         @NamedQuery(name="Book.findByTitle",
-        		query="SELECT c FROM Book c WHERE LOWER(c.title) LIKE :filter")    
+        		query="SELECT c FROM Book c WHERE LOWER(c.title) LIKE :filter")
 })
 @Entity
 public class Book implements Serializable {
@@ -27,15 +28,15 @@ public class Book implements Serializable {
     private int id;
 
     private String title;
-    
+
     private int seq;
-    
+
     private String heading;
 
     private String body;
 
     private String link;
-    
+
 	public int getId() {
         return id;
     }
@@ -97,7 +98,7 @@ public class Book implements Serializable {
     public void setHeading(String heading) {
         this.heading = heading;
     }
-    
+
     /**
      * Get the value of body
      *
@@ -138,5 +139,6 @@ public class Book implements Serializable {
     public boolean isPersisted() {
         return id > 0;
     }
+
 
 }

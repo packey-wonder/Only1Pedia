@@ -3,7 +3,6 @@ package org.vaadin.presentation.views;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -39,7 +38,7 @@ import com.vaadin.ui.UI;
  * editing. There is also RIA features like on the fly filtering.
  */
 @CDIView("customers")
-@RolesAllowed({"user"})
+//@RolesAllowed({"user"})
 @ViewMenuItem(icon = FontAwesome.USERS, order = ViewMenuItem.BEGINNING)
 public class CustomerListView extends MVerticalLayout implements View {
 
@@ -162,29 +161,27 @@ public class CustomerListView extends MVerticalLayout implements View {
      */
     private void adjustTableColumns() {
         if (ScreenSize.getScreenSize() == ScreenSize.LARGE) {
-            customerTable.setVisibleColumns("firstName", "lastName", "email",
-                    "status", "role", "password");
-            customerTable.setColumnHeaders("First name", "Last name", "Email",
-                    "Status", "Role", "Password");
+            customerTable.setVisibleColumns("membershipNo", "status", "role", "password");
+            customerTable.setColumnHeaders("メンバーNo.","Status", "Role", "Password");
         } else {
             // Only show one (generated) column with combined first + last name
-            if (customerTable.getColumnGenerator("name") == null) {
-                customerTable.addGeneratedColumn("name",
+            if (customerTable.getColumnGenerator("membershipNo") == null) {
+                customerTable.addGeneratedColumn("メンバーNo.",
                         new Table.ColumnGenerator() {
                             @Override
                             public Object generateCell(Table table, Object o,
                                     Object o2) {
                                 Customer c = (Customer) o;
-                                return c.getFirstName() + " " + c.getLastName();
+                                return c.getMembershipNo() ;
                             }
                         });
             }
             if (ScreenSize.getScreenSize() == ScreenSize.MEDIUM) {
-                customerTable.setVisibleColumns("name", "email");
-                customerTable.setColumnHeaders("Name", "Email");
+                customerTable.setVisibleColumns("membershipNo", "managerClass");
+                customerTable.setColumnHeaders("メンバーNo.", "管理区分");
             } else {
-                customerTable.setVisibleColumns("name");
-                customerTable.setColumnHeaders("Name");
+                customerTable.setVisibleColumns("membershipNo");
+                customerTable.setColumnHeaders("メンバーNo.");
             }
         }
     }

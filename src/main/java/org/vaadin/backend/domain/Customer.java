@@ -17,7 +17,9 @@ import javax.persistence.Version;
         @NamedQuery(name="Customer.findAll",
                 query="SELECT c FROM Customer c"),
         @NamedQuery(name="Customer.findByName",
-                query="SELECT c FROM Customer c WHERE LOWER(c.firstName) LIKE :filter OR LOWER(c.lastName) LIKE :filter"),
+        		query="SELECT c FROM Customer c WHERE LOWER(c.membershipNo) LIKE :filter "),
+        @NamedQuery(name="Customer.findByMembershipNo",
+        		query="SELECT c FROM Customer c WHERE LOWER(c.membershipNo) LIKE :filter "),
 })
 @Entity
 public class Customer implements Serializable {
@@ -28,13 +30,15 @@ public class Customer implements Serializable {
 
     @Version int version;
 
-    private String firstName;
-
-    private String lastName;
+    private String membershipNo;
 
     private String password;
 
-    private CustomerStatus status;
+    //    管理者か？
+    private ManagerClass managerClass;
+
+    //    学徒種別
+    private MemberStatus status;
 
     public int getId() {
         return id;
@@ -49,7 +53,7 @@ public class Customer implements Serializable {
      *
      * @return the value of status
      */
-    public CustomerStatus getStatus() {
+    public MemberStatus getStatus() {
         return status;
     }
 
@@ -58,53 +62,35 @@ public class Customer implements Serializable {
      *
      * @param status new value of status
      */
-    public void setStatus(CustomerStatus status) {
+    public void setStatus(MemberStatus status) {
         this.status = status;
     }
 
     /**
-     * Get the value of lastName
+     * Get the value of membershipNo
      *
-     * @return the value of lastName
+     * @return the value of membershipNo
      */
-    public String getLastName() {
-        return lastName;
+    public String getMembershipNo() {
+        return membershipNo;
     }
 
     /**
-     * Set the value of lastName
+     * Set the value of membershipNo
      *
-     * @param lastName new value of lastName
+     * @param membershipNo new value of membershipNo
      */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setMembershipNo(String firstName) {
+        this.membershipNo = firstName;
     }
 
     /**
-     * Get the value of firstName
+     * Get the value of membershipNo
      *
-     * @return the value of firstName
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /**
-     * Set the value of firstName
-     *
-     * @param firstName new value of firstName
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Get the value of firstName
-     *
-     * @return the value of firstName
+     * @return the value of membershipNo
      */
     public String getName() {
-        return lastName + " " + firstName;
+        return membershipNo;
     }
 
 
@@ -118,6 +104,20 @@ public class Customer implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return managerClass
+	 */
+	public ManagerClass getManagerClass() {
+		return managerClass;
+	}
+
+	/**
+	 * @param managerClass セットする managerClass
+	 */
+	public void setManagerClass(ManagerClass managerClass) {
+		this.managerClass = managerClass;
 	}
 
 

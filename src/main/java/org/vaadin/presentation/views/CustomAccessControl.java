@@ -22,12 +22,19 @@ public class CustomAccessControl extends AccessControl {
     public boolean isUserInRole(String role) {
        System.err.println("checking role\n");
         if (isUserSignedIn()) {
+          	System.err.println("Signed In OK!\n");
+          	System.err.println("role=" + role);
+           	System.err.println("getRoles=" + userInfo.getRoles().toString());
+
             for (String userRole : userInfo.getRoles()) {
+            	System.err.println("UserRole= "+userRole);
                 if (role.equals(userRole)) {
+                	System.err.println("check OK");
                     return true;
                 }
             }
         }
+    	System.err.println("check False");
         return false;
     }
 

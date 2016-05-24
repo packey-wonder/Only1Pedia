@@ -1,7 +1,6 @@
 package org.vaadin.backend;
 
 import java.util.List;
-import java.util.Random;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -9,7 +8,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.vaadin.backend.domain.Customer;
-import org.vaadin.backend.domain.CustomerStatus;
+import org.vaadin.backend.domain.ManagerClass;
+import org.vaadin.backend.domain.MemberStatus;
 
 @Stateless
 public class CustomerService {
@@ -69,17 +69,15 @@ public class CustomerService {
      */
     public void ensureTestData() {
         if (findAll().isEmpty()) {
-            final String[] names = new String[]{"Gabrielle Patel", "Brian Robinson", "Eduardo Haugen", "Koen Johansen", "Alejandro Macdonald", "Angel Karlsson", "Yahir Gustavsson", "Haiden Svensson", "Emily Stewart", "Corinne Davis", "Ryann Davis", "Yurem Jackson", "Kelly Gustavsson", "Eileen Walker", "Katelyn Martin", "Israel Carlsson", "Quinn Hansson", "Makena Smith", "Danielle Watson", "Leland Harris", "Gunner Karlsen", "Jamar Olsson", "Lara Martin", "Ann Andersson", "Remington Andersson", "Rene Carlsson", "Elvis Olsen", "Solomon Olsen", "Jaydan Jackson", "Bernard Nilsen"};
-            Random r = new Random(0);
+        	final String[] names = new String[]{"K1 0 4", "E1 1 1", "G1 1 1"};
             for (String name : names) {
                 String[] split = name.split(" ");
                 Customer c = new Customer();
-                c.setFirstName(split[0]);
-                c.setLastName(split[1]);
+                c.setMembershipNo(split[0]);
                 // added to support login and access control
                 c.setPassword("abc123");
-                c.setStatus(CustomerStatus.values()[r.nextInt(CustomerStatus.
-                        values().length)]);
+                c.setManagerClass(ManagerClass.values()[Integer.parseInt(split[1])]);
+                c.setStatus(MemberStatus.values()[Integer.parseInt(split[2])]);
 
                 saveOrPersist(c);
             }
@@ -93,5 +91,20 @@ public class CustomerService {
         }
         ensureTestData();
     }
+
+	public Customer findByMembershipNo(String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return null;
+        }
+        filter = filter.toLowerCase();
+        List<Customer> list =  entityManager.createNamedQuery("Customer.findByMembershipNo",
+                Customer.class)
+                .setParameter("filter", filter).getResultList();
+        if (list.size() == 0) {
+        	return null;
+        } else {
+        	return list.get(0);
+        }
+	}
 
 }

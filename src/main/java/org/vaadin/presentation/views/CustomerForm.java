@@ -1,11 +1,13 @@
 package org.vaadin.presentation.views;
 
-import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
+import javax.inject.Inject;
+
 import org.vaadin.backend.CustomerService;
 import org.vaadin.backend.domain.Customer;
-import org.vaadin.backend.domain.CustomerStatus;
-import org.vaadin.backend.domain.Gender;
+import org.vaadin.backend.domain.ManagerClass;
+import org.vaadin.backend.domain.MemberStatus;
 import org.vaadin.viritin.fields.MTextField;
 import org.vaadin.viritin.fields.TypedSelect;
 import org.vaadin.viritin.form.AbstractForm;
@@ -13,9 +15,10 @@ import org.vaadin.viritin.label.Header;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * A UI component built to modify Customer entities. The used superclass
@@ -36,14 +39,12 @@ public class CustomerForm extends AbstractForm<Customer> {
 
     // Prepare some basic field components that our bound to entity property
     // by naming convetion, you can also use PropertyId annotation
-    TextField firstName = new MTextField("First name").withFullWidth();
-    TextField lastName = new MTextField("Last name").withFullWidth();
-    DateField birthDate = new DateField("Birth day");
+    TextField membershipNo = new MTextField("メンバーNo.").withFullWidth();
     // Select to another entity, options are populated in the init method
-    TypedSelect<CustomerStatus> status = new TypedSelect().
-            withCaption("Status");
-    OptionGroup gender = new OptionGroup("Gender");
-    TextField email = new MTextField("Email").withFullWidth();
+    TypedSelect<ManagerClass> managerClass = new TypedSelect().
+            withCaption("管理区分");
+    TypedSelect<MemberStatus> status = new TypedSelect().
+            withCaption("種別");
 
     @Override
     protected Component createContent() {
@@ -51,13 +52,10 @@ public class CustomerForm extends AbstractForm<Customer> {
         setStyleName(ValoTheme.LAYOUT_CARD);
 
         return new MVerticalLayout(
-                new Header("Edit customer").setHeaderLevel(3),
+                new Header("メンバー編集").setHeaderLevel(3),
                 new MFormLayout(
-                        firstName,
-                        lastName,
-                        email,
-                        birthDate,
-                        gender,
+                		membershipNo,
+                		managerClass,
                         status
                 ).withFullWidth(),
                 getToolbar()
@@ -67,10 +65,11 @@ public class CustomerForm extends AbstractForm<Customer> {
     @PostConstruct
     void init() {
         setEagerValidation(true);
+        managerClass.setWidthUndefined();
+        managerClass.setOptions(ManagerClass.values());
         status.setWidthUndefined();
-        status.setOptions(CustomerStatus.values());
-        gender.addItems((Object[]) Gender.values());
-        gender.setStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
+        status.setOptions(MemberStatus.values());
+
         setSavedHandler(new SavedHandler<Customer>() {
 
             @Override
@@ -83,7 +82,7 @@ public class CustomerForm extends AbstractForm<Customer> {
                     saveEvent.fire(entity);
                 } catch (EJBException e) {
                     /*
-                     * The Customer object uses optimitic locking with the 
+                     * The Customer object uses optimitic locking with the
                      * version field. Notify user the editing didn't succeed.
                      */
                     Notification.show("The customer was concurrently edited "

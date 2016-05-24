@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.themes.ValoTheme;
 
 /*
- * A very simple view that just displays an "about text". The view also has 
+ * A very simple view that just displays an "about text". The view also has
  * a button to reset the demo date in the database.
  */
 @CDIView("")
@@ -29,48 +29,48 @@ public class LoginView extends MVerticalLayout implements View {
 
     @Inject
     private CustomerService service;
-	
+
     @Inject
 	private UserInfo user;
 
 
     @PostConstruct
     void init() {
-	    // ViewMenuUI.getMenu().setActive("customers");
+	    ViewMenuUI.getMenu().setActive("customers");
     	final DefaultVerticalLoginForm loginForm = new DefaultVerticalLoginForm();
     	loginForm.addLoginListener(new LoginListener() {
     	    @Override
     	    public void onLogin(LoginEvent event) {
-    	    
-    	    	
+
+
     	        System.err.println(
     	                "Logged in with user name " + event.getUserName() +
     	                        " and password of length " + event.getPassword().length());
-    	        Customer cust = service.findByEmail(event.getUserName());
-    	
-    	    
-    	        if(cust != null) {    
+    	        Customer cust = service.findByMembershipNo(event.getUserName());
+
+
+    	        if(cust != null) {
     	        	System.err.println("user password is " + cust.getPassword() );
     	        	if (cust.getPassword().equals(event.getPassword()))  {
-    	        			
+
     	        			user.setUser(cust);
-    	        			System.err.println("パスワードが間違っています");
-    	        		
+    	        			System.err.println("Password OK");
+
     	        			ViewMenuUI.getMenu().navigateTo(AboutView.class);
     	        	} else {
-    	        		System.err.println("パスワードが間違っています");
+	        			System.err.println("Password NG!");
     	        		loginForm.clear();
     	        	}
-    	        	
+
     	        } else {
     	        	System.err.println("ユーザーが見つかりません");
     	        	loginForm.clear();
     	        }
-    	        
-    	       
+
+
     	    }
     	});
-    	
+
         add(loginForm);
 
 
@@ -81,6 +81,6 @@ public class LoginView extends MVerticalLayout implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
     	user.setUser(null);
-    	
+
     }
 }

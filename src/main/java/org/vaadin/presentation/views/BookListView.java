@@ -3,7 +3,6 @@ package org.vaadin.presentation.views;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -39,7 +38,7 @@ import com.vaadin.ui.UI;
  * editing. There is also RIA features like on the fly filtering.
  */
 @CDIView("books")
-@RolesAllowed({"user"})
+//@RolesAllowed({"user"})
 @ViewMenuItem(icon = FontAwesome.BOOK, title = "書籍データ編集" , order = ViewMenuItem.BEGINNING)
 public class BookListView extends MVerticalLayout implements View {
 
