@@ -1,7 +1,9 @@
 package org.vaadin.presentation.views;
 
-import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
+import javax.inject.Inject;
+
 import org.vaadin.backend.BookService;
 import org.vaadin.backend.domain.Book;
 import org.vaadin.viritin.fields.MTextField;
@@ -10,9 +12,11 @@ import org.vaadin.viritin.label.Header;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * A UI component built to modify Book entities. The used superclass
@@ -71,7 +75,7 @@ public class BookForm extends AbstractForm<Book> {
                     saveEvent.fire(entity);
                 } catch (EJBException e) {
                     /*
-                     * The Book object uses optimitic locking with the 
+                     * The Book object uses optimitic locking with the
                      * version field. Notify user the editing didn't succeed.
                      */
                     Notification.show("The book was concurrently edited "

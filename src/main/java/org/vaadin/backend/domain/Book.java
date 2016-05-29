@@ -2,6 +2,7 @@ package org.vaadin.backend.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,9 @@ import javax.persistence.NamedQuery;
 @Entity
 public class Book implements Serializable {
 
-    @Id
+   // private static final int _1000 = 1000;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
@@ -33,6 +36,7 @@ public class Book implements Serializable {
 
     private String heading;
 
+    @Column(length = 9000)
     private String body;
 
     private String link;
