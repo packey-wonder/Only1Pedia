@@ -1,44 +1,37 @@
 package org.vaadin.presentation.views;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 
-import org.tepi.filtertable.FilterDecorator;
 import org.tepi.filtertable.FilterTable;
-import org.tepi.filtertable.demo.DemoFilterDecorator;
-import org.tepi.filtertable.demo.DemoFilterDecorator.State;
-import org.tepi.filtertable.demo.DemoFilterGenerator;
 import org.vaadin.backend.CustomerService;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
-import org.vaadin.cdiviewmenu.ViewMenuUI;
-import org.vaadin.viritin.label.RichText;
+import org.vaadin.pagingcomponent.PagingComponent;
+import org.vaadin.pagingcomponent.RangeDisplayer;
+import org.vaadin.pagingcomponent.listener.impl.SimplePagingComponentListener;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import com.vaadin.cdi.CDIView;
-import com.vaadin.data.Container;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+
 /*
- * A very simple view that just displays an "about text". The view also has 
+ * A very simple view that just displays an "about text". The view also has
  * a button to reset the demo date in the database.
  */
 @CDIView("search")
-@RolesAllowed({"user"})
+//@RolesAllowed({"user"})
 @ViewMenuItem(icon = FontAwesome.SUPPORT)
 public class SearchView extends MVerticalLayout implements View {
 
@@ -46,104 +39,70 @@ public class SearchView extends MVerticalLayout implements View {
     CustomerService service;
 
     private FilterTable filterTable;
-    
-    
+
+
     @PostConstruct
     void init() {
-    	
 
-        /* Create FilterTable */
-        filterTable = buildFilterTable();
 
-        //mainLayout.setSizeFull();
-       // mainLayout.setSpacing(true);
-       // mainLayout.setMargin(true);
-        add(filterTable);
-        setExpandRatio(filterTable, 1);
-        add(buildButtons());
-           	
+		VerticalLayout verticalContent = new VerticalLayout();
+		verticalContent.addComponent(rangeDisplayerExemple());
+
+		addComponents(verticalContent);
 
         setMargin(new MarginInfo(false, true, true, true));
         setStyleName(ValoTheme.LAYOUT_CARD);
     }
-    
 
-    private FilterTable buildFilterTable() {
-        FilterTable filterTable = new FilterTable();
-        filterTable.setSizeFull();
-        filterTable.setFilterDecorator(new DemoFilterDecorator());
-        filterTable.setFilterGenerator(new DemoFilterGenerator());
-        filterTable.setContainerDataSource(buildContainer());
-        filterTable.setFilterBarVisible(true);
-        return filterTable;
-    }
+	/**
+	 * Example with {@link RangeDisplayer}, i.e. display "Product 20-40 currently displayed".
+	 */
+	private VerticalLayout rangeDisplayerExemple() {
+		// Test data
+		List<Integer> items = createItems();
 
-    private Component buildButtons() {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setSizeUndefined();
-        buttonLayout.setSpacing(true);
-        Button showFilters = new Button("Show filter bar");
- 
-        showFilters.addClickListener(new Button.ClickListener() {
+		final VerticalLayout mainLayout = new VerticalLayout();
+
+		// Layout where we will display items (changing when we click next page).
+		final VerticalLayout itemsArea = new VerticalLayout();
+
+		// Visual controls (First, Previous,1 2 ..., Next, Last)
+		final PagingComponent<Integer> pagingComponent = PagingComponent.paginate(items).addListener(new SimplePagingComponentListener<Integer>(itemsArea) {
+
 			@Override
-			public void buttonClick(ClickEvent event) {
-				 filterTable.setFilterBarVisible(true);
-				
+			protected Component displayItem(int index, Integer item) {
+				return new Label(String.valueOf(item));
 			}
-        });
-        buttonLayout.addComponent(showFilters);
-        Button hideFilters = new Button("Hide filter bar");
-        hideFilters.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                filterTable.setFilterBarVisible(false);   
-            }
-        });
-        buttonLayout.addComponent(hideFilters);
-        return buttonLayout;
-    }
 
-    private Container buildContainer() {
-        IndexedContainer cont = new IndexedContainer();
-        Calendar c = Calendar.getInstance();
+		}).build();
 
-        cont.addContainerProperty("name", String.class, null);
-        cont.addContainerProperty("id", Integer.class, null);
-        cont.addContainerProperty("state", State.class, null);
-        cont.addContainerProperty("date", Date.class, null);
-        cont.addContainerProperty("validated", Boolean.class, null);
+		// We declare a RangeDisplayer which takes PagingComponent as parameter
+		RangeDisplayer<Integer> rd = new RangeDisplayer<Integer>(pagingComponent);
+		// We set the value to be displayed before range ex : results : 10-20
+		// It's optional
+		rd.setValue("results : ");
 
-        Random random = new Random();
-        for (int i = 0; i < 10000; i++) {
-            cont.addItem(i);
-            /* Set name and id properties */
-            cont.getContainerProperty(i, "name").setValue("Order " + i);
-            cont.getContainerProperty(i, "id").setValue(i);
-            /* Set state property */
-            int rndInt = random.nextInt(4);
-            State stateToSet = State.CREATED;
-            if (rndInt == 0) {
-                stateToSet = State.PROCESSING;
-            } else if (rndInt == 1) {
-                stateToSet = State.PROCESSED;
-            } else if (rndInt == 2) {
-                stateToSet = State.FINISHED;
-            }
-            cont.getContainerProperty(i, "state").setValue(stateToSet);
-            /* Set date property */
-            cont.getContainerProperty(i, "date").setValue(c.getTime());
-            c.add(Calendar.DAY_OF_MONTH, 1);
-            /* Set validated property */
-            cont.getContainerProperty(i, "validated").setValue(
-                    random.nextBoolean());
-        }
-        return cont;
-    }
-    	
-    	
-
+		mainLayout.addComponent(new Label("<h1>検索結果<h1>", ContentMode.HTML));
+		mainLayout.addComponent(itemsArea);
+		mainLayout.addComponent(pagingComponent);
+		mainLayout.addComponent(rd);
+		return mainLayout;
+	}
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
     }
+
+
+	/**
+	 * @return a list of Integers
+	 */
+	private List<Integer> createItems() {
+		List<Integer> items = new ArrayList<Integer>();
+		for (Integer i = 1; i <= 300; i++) {
+			items.add(i);
+		}
+
+		return items;
+	}
 }
