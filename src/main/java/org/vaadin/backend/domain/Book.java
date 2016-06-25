@@ -17,14 +17,22 @@ import javax.persistence.NamedQuery;
         @NamedQuery(name="Book.findAll",
                 query="SELECT c FROM Book c"),
         @NamedQuery(name="Book.findByName",
-                query="SELECT c FROM Book c WHERE LOWER(c.heading) LIKE :filter OR LOWER(c.body) LIKE :filter"),
+                query="SELECT c FROM Book c WHERE c.heading LIKE :filter OR c.body LIKE :filter"),
         @NamedQuery(name="Book.findByTitle",
-        		query="SELECT c FROM Book c WHERE LOWER(c.title) LIKE :filter")
+        		query="SELECT c FROM Book c WHERE c.title LIKE :filter"),
+        @NamedQuery(name="Book.findByWord",
+        		query="SELECT c FROM Book c WHERE c.heading LIKE :filter OR c.body LIKE :filter"),
 })
 @Entity
 public class Book implements Serializable {
 
    // private static final int _1000 = 1000;
+
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 423809442562971469L;
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

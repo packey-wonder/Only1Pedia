@@ -1,22 +1,21 @@
 package org.vaadin.backend;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.vaadin.backend.domain.Book;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+
+import org.vaadin.backend.domain.Book;
 
 @Stateless
 public class BookService {
 
     @PersistenceContext(unitName = "customer-pu")
     private EntityManager entityManager;
+
+	private List<Book> listBooks;
 
     public void saveOrPersist(Book entity) {
         if (entity.getId() > 0) {
@@ -48,7 +47,7 @@ public class BookService {
         filter = filter.toLowerCase();
         return entityManager.createNamedQuery("Book.findByName",
                 Book.class)
-                .setParameter("filter", filter + "%").getResultList();
+                .setParameter("filter",  "%" + filter + "%").getResultList();
     }
     public Book findByEmail(String filter) {
         if (filter == null || filter.isEmpty()) {
@@ -63,6 +62,28 @@ public class BookService {
         } else {
         	return list.get(0);
         }
+    }
+
+    public List<Book> findByWord(String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return findAll();
+        }
+        filter = filter.toLowerCase();
+        return entityManager.createNamedQuery("Book.findByWord",
+                Book.class)
+                .setParameter("filter", filter + "%").getResultList();
+    }
+
+    /** Returns the number of books of the "DB" */
+    public int countAllBooks() {
+    	listBooks=findAll();
+    	return listBooks.size();
+    }
+
+
+    /** Returns a "page" of the resultSet (if we had a DB) */
+    public List<Book> getBooksFromRange(int indexStart, int indexEnd){
+        return listBooks.subList(indexStart, indexEnd);
     }
 
 }
